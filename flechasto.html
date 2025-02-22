@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flecha Direccional</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #arrow {
+            font-size: 100px;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .hidden {
+            opacity: 0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #FEF20D;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #e6d70c;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="arrow">⬅️</div>
+    <button onclick="toggleArrow()">Iniciar</button>
+
+    <script>
+        let directions = ["⬅️", "➡️"];
+        let lastPattern = [];
+        let interval;
+        let running = false;
+
+        function getNewPattern() {
+            let newPattern = [];
+            while (newPattern.length < 10) { 
+                let newDirection = directions[Math.floor(Math.random() * directions.length)];
+                newPattern.push(newDirection);
+            }
+            return newPattern;
+        }
+
+        function changeArrow() {
+            document.getElementById("arrow").classList.add("hidden");
+
+            setTimeout(() => {
+                let newPattern = getNewPattern();
+                while (JSON.stringify(newPattern) === JSON.stringify(lastPattern)) {
+                    newPattern = getNewPattern();
+                }
+                lastPattern = newPattern;
+
+                let arrow = document.getElementById("arrow");
+                arrow.innerHTML = newPattern[0]; 
+                newPattern.shift(); 
+
+                document.getElementById("arrow").classList.remove("hidden");
+            }, 500);
+        }
+
+        function toggleArrow() {
+            let button = document.querySelector("button");
+
+            if (running) {
+                clearInterval(interval);
+                running = false;
+                button.innerText = "Iniciar";
+            } else {
+                lastPattern = [];
+                interval = setInterval(changeArrow, 2000);
+                running = true;
+                button.innerText = "Detener";
+            }
+        }
+    </script>
+
+</body>
+</html>
